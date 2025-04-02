@@ -5,16 +5,18 @@ const options = {
   workShift: '🕒 Horario de atención',
   location: '📍Ubicación y cómo llegar',
   models: '📦 Modelos disponibles y precios',
-  order: '🛒 Hacer un pedido'
+  order: '🛒 Hacer un pedido',
+  billing: '💵 Facturación'
 }
 
 const menus = {
   mainMenu: `📦 *¡BIENVENIDO A LA CAJA DISTRIBUIDORA!*
-  Es un gusto atender, seleccione una opción: 
+  Es un gusto atenderle, seleccione una opción: 
     1. ${options.workShift}
     2. ${options.location}
     3. ${options.models}
     4. ${options.order}
+    5. ${options.billing}
   `,
   workShift: `🕒 *HORARIO DE ATENCIÓN*
     Lunes a Viernes: 9:00 AM - 6:00 PM
@@ -37,6 +39,10 @@ const menus = {
   `,
   order: `🛒 *REALIZAR PEDIDO*   
     Espere a que un agente de ventas se una a la conversación 
+    0. ${options.mainMenu}
+  `,
+  billing: `💵 *Facturación*
+    Por favor envía una foto de tu ticket de compra y tu constancia de situación fiscal
     0. ${options.mainMenu}
   `
 };
@@ -140,6 +146,9 @@ async function handleMainMenu(client, user, userMessage) {
     case 4:
       userState[user] = 'order';
       break;
+    case 5:
+      userState[user] = 'billing'
+      break;
     default:
       await sendInvalidOption(client, user);
   }
@@ -162,6 +171,9 @@ async function handleSubMenu(client, user, userMessage) {
       break;
     case 'order': 
       await handleOrderMenu(client, user, userMessage);
+      break;
+    case 'billing': 
+      await handleBillingMenu(client, user, userMessage);
       break;
   }
 }
@@ -192,6 +204,8 @@ async function handleLocationMenu(client, user, userMessage) {
       break;
     default: 
       await client.sendText(user, invalidInputMessage);
+      await displayLocationInformation(client, user);
+      return;
   }
 
   await client.sendText(user, menus[userState[user]])
@@ -210,6 +224,18 @@ async function handleModelsMenu(client, user, userMessage) {
 }
 
 async function handleOrderMenu(client, user, userMessage) {
+  switch(userMessage) {
+    case 0:
+      userState[user] = 'mainMenu';
+      break;
+    default:
+      await client.sendText(user, invalidInputMessage);
+  }
+
+  await client.sendText(user, menus[userState[user]]);
+}
+
+async function handleBillingMenu(client,user,userMessage) {
   switch(userMessage) {
     case 0:
       userState[user] = 'mainMenu';
