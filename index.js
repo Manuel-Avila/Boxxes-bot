@@ -174,9 +174,9 @@ async function handleMenuNavegation(user, userMessage) {
 
   // Si entra en esta condicion significa que el usuario acaba de solicitar a un agente.
   if(needAgent.includes(nextMenu)) {
-    await sendText('120363169303015691@g.us', 
-      `💬 *SE SOLICITO UN AGENTE*
-        Número del usuario: ${user.replace('@c.us', '')}`);
+    // await sendText('120363169303015691@g.us', 
+    //   `💬 *SE SOLICITO UN AGENTE*
+    //     Número del usuario: ${user.replace('@c.us', '')}`);
     return;
   }
 
