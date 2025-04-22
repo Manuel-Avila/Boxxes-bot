@@ -141,6 +141,7 @@ async function handleMenuNavegation(user, userMessage) {
   const currentMenu = userState[user];
   const nextMenu = menuNavegation[currentMenu]?.[userMessage];
   const userInputOptions = ['order', 'billing', 'agent'];
+  const needAgent = ['order', 'agent'];
   const redirectToMainMenu = ['workshift'];
 
   if(nextMenu === 'location') {
@@ -171,8 +172,17 @@ async function handleMenuNavegation(user, userMessage) {
   userState[user] = nextMenu;
   await sendText(user, menus[nextMenu]);
 
+  // Si entra en esta condicion significa que el usuario acaba de solicitar a un agente.
+  if(needAgent.includes(nextMenu)) {
+    await sendText('120363169303015691@g.us', 
+      `💬 *SE SOLICITO UN AGENTE*
+        Número del usuario: ${user.replace('@c.us', '')}`);
+    return;
+  }
+
   if(redirectToMainMenu.includes(userState[user])) {
     userState[user] = 'mainMenu';
     await sendText(user, menus['mainMenu']);
+    return;
   }
 }
