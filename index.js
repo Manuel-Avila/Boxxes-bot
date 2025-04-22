@@ -1,6 +1,7 @@
 const venom = require("venom-bot");
 
-const goBackOption = '⬅️ Volver al menú principal'
+const goBackOption = '⬅️ Volver al menú principal';
+const agentGroupId = '';
 
 const menus = {
   mainMenu: `📦 *¡BIENVENIDO A LA CAJA DISTRIBUIDORA!*
@@ -174,13 +175,13 @@ async function handleMenuNavegation(user, userMessage) {
 
   // Si entra en esta condicion significa que el usuario acaba de solicitar a un agente.
   if(needAgent.includes(nextMenu)) {
-    // await sendText('120363169303015691@g.us', 
-    //   `💬 *SE SOLICITO UN AGENTE*
-    //     Número del usuario: ${user.replace('@c.us', '')}`);
+    await sendText(agentGroupId, 
+      `💬 *SE SOLICITO UN AGENTE*
+        Número del usuario: ${user.replace('@c.us', '')}`);
     return;
   }
 
-  if(redirectToMainMenu.includes(userState[user])) {
+  if(redirectToMainMenu.includes(nextMenu)) {
     userState[user] = 'mainMenu';
     await sendText(user, menus['mainMenu']);
     return;
