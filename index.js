@@ -1,7 +1,14 @@
 const venom = require("venom-bot");
 
 const goBackOption = '⬅️ Volver al menú principal';
-const agentGroupId = '';
+const agentGroupId = '@g.us';
+
+// Agregar el prifijo del principio 521 y la parte final @c.us
+const whiteList = [
+  {name: 'Gaby', number: '@c.us'},
+  {name: 'Jio', number: '@c.us'},
+  {name: 'Hola bonita', number: '@c.us'}
+]
 
 const menus = {
   mainMenu: `📦 *¡BIENVENIDO A LA CAJA DISTRIBUIDORA!*
@@ -85,9 +92,13 @@ function start(c) {
     try {
       // Valida que el mensaje no sea en un grupo y tenga texto
       if (message.isGroupMsg || !message.body) return;
-    
-      console.log("📩 Mensaje recibido:", message.body);
+
       const user = message.from;
+      
+      // Ignora mensajes de las personas en la white list
+      if (isOnWhiteList(user)) return;
+
+      console.log("📩 Mensaje recibido:", message.body);
       
       // Delay entre mensajes de 2 segundos para evitar spam
       const now = Date.now();
@@ -186,4 +197,8 @@ async function handleMenuNavegation(user, userMessage) {
     await sendText(user, menus['mainMenu']);
     return;
   }
+}
+
+function isOnWhiteList(user) {
+  return whiteList.some(person => person.number === user);
 }
